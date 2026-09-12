@@ -1,0 +1,7 @@
+# Copy to CODEOWNERS and replace these example teams with real repository teams.
+* @your-org/engineering
+/backend/ @your-org/backend
+/api/ @your-org/backend
+/.github/ @your-org/platform
+/AGENTS.md @your-org/platform
+/scripts/ @your-org/platform

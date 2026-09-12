@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: Illustrative estimation API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8080
+paths:
+  /api/v1/estimate:
+    get:
+      operationId: estimate
+      description: A single points parameter is required. Duplicate values are rejected.
+      parameters:
+        - name: points
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Four illustrative hours per point
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: object
+                    required: [points, hours]
+                    properties:
+                      points:
+                        type: integer
+                      hours:
+                        type: integer
+                  meta:
+                    $ref: '#/components/schemas/Metadata'
+        '400':
+          $ref: '#/components/responses/Error'
+        '405':
+          $ref: '#/components/responses/Error'
+  /healthz:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: Process is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: object
+                    required: [status]
+                    properties:
+                      status:
+                        type: string
+                        enum: [ok]
+                  meta:
+                    $ref: '#/components/schemas/Metadata'
+        '405':
+          $ref: '#/components/responses/Error'
+components:
+  schemas:
+    Metadata:
+      type: object
+      required: [timestamp]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [VALIDATION_ERROR, NOT_FOUND, METHOD_NOT_ALLOWED]
+            message:
+              type: string
+  responses:
+    Error:
+      description: Invalid input (400), unknown route (404), or method not allowed (405; Allow header is GET)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

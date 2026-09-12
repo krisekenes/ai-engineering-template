@@ -1,0 +1,10 @@
+/backend/server
+/evals/results/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.test
+coverage.out
+
+/examples/repair-loop/repair-run-*/
